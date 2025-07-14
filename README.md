@@ -127,6 +127,7 @@ sudo tail -f /var/log/netwatchdog.log
 🏷️ **Vendor:** `Raspberry Pi Foundation`  
 🧠 **OS:** `Linux 5.10 (Raspbian)`  
 🕒 **Seen at:** `Mon, 14 Jul 2025 22:18:31 IST`
+```
 
 ## 🔐 Notes
 
