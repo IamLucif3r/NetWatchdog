@@ -1,60 +1,138 @@
-# 🛡️ NetWatchdog
-Notifies you when a new device joins your local or Tailscale network.
+# 🕵️‍♂️ NetWatchdog
 
-## 📝 Overview
+NetWatchdog is a lightweight network watchdog tool written in Go that scans your local Wi-Fi network (and optional Tailscale network) to detect newly connected devices and alert you via Discord — just like a paranoid hacker monitoring their home base 👀.
 
-**NetWatchdog** is a network monitoring tool written in Go that detects and notifies you when new devices join your local network or your Tailscale mesh. It helps you maintain awareness of your network environment and enhances security by alerting you to unexpected connections.
+---
 
-## ✨ Features
+## 🚀 Features
 
-- Monitors local and Tailscale networks for new device connections
-- Sends real-time notifications when a new device is detected
-- Lightweight and easy to deploy
-- Configurable notification channels (email, Slack, etc.)
-- Cross-platform support
+- 🧠 Smart detection of new devices on your network
+- 🔍 OS detection using `nmap`
+- 🌐 MAC vendor lookup
+- 📶 SSID identification on macOS/Linux
+- 🛎️ Real-time Discord alerting
+- 📜 Initial full inventory dump on startup
+- 🧠 Works with Tailscale (optional)
+- 💻 Minimal dependencies, no server required
 
-## ⚙️ Installation
+---
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/NetWatchdog.git
-    cd NetWatchdog
-    ```
-2. Build the project:
-    ```bash
-    go build -o netwatchdog
-    ```
-3. Configure your notification settings in `config.yaml`.
+## 🛠 Requirements
 
-## Usage
+- Go 1.20+
+- macOS or Linux
+- `nmap` installed (`brew install nmap` or `apt install nmap`)
+- A Discord Webhook URL
+- (macOS only) `airport` command (comes pre-installed)
 
-Run NetWatchdog with:
+---
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/yourusername/netwatchdog
+cd netwatchdog
+go build -o netwatchdog
+```
+
+## ⚙️ Configuration
+
+Create a config file:
+
+```bash
+# ~/.netwatchdog/config.yaml
+
+interface: en1
+cache_file: /Users/yourname/.netwatchdog/cache.json
+discord_webhook: https://discord.com/api/webhooks/xxxx/yyyy
+enable_tailscale: false
+
+```
+**Note** You can detect your Wi-Fi interface using ifconfig or networksetup -listallhardwareports.
+
+## ▶️ Running the Tool
+
 ```bash
 sudo ./netwatchdog
 ```
+You’ll see a full inventory alert on first run and Discord notifications for any new device joining the network.
 
-You can customize monitoring intervals and notification preferences in the configuration file.
+## 🔁 Run at Startup (macOS LaunchDaemon)
+Move binary to global path:
 
-## Configuration
+```bash
+sudo cp ./netwatchdog /usr/local/bin/
+sudo chmod +x /usr/local/bin/netwatchdog
+```
+Create launch daemon file:
 
-Here is an example of config.json
+```bash
+sudo nano /Library/LaunchDaemons/com.netwatchdog.plist
+```
+Paste this:
 
-```json
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.netwatchdog</string>
 
-{
-  "interface": "en1",
-  "discord_webhook": "https://discord.com/api/webhooks/1234...",
-  "enable_tailscale": false,
-  "cache_file": "data/known.json"
-}
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/netwatchdog</string>
+  </array>
 
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/var/log/netwatchdog.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/var/log/netwatchdog.err</string>
+</dict>
+</plist>
 ```
 
-## Contributing
+Set permissions and load it:
 
-Contributions are welcome! Please open issues or submit pull requests for new features, bug fixes, or improvements.
+```bash
+sudo chown root:wheel /Library/LaunchDaemons/com.netwatchdog.plist
+sudo chmod 644 /Library/LaunchDaemons/com.netwatchdog.plist
 
+sudo launchctl load /Library/LaunchDaemons/com.netwatchdog.plist
+```
 
-## Contact
+Check logs:
+```bash
+sudo tail -f /var/log/netwatchdog.log
+```
 
-For questions or support, please open an issue on GitHub.
+## 🧪 Example Output (Discord)
+
+```markdown
+🚨 **New Device Joined the Network!**
+
+📍 **Source:** Wi-Fi  
+📶 **SSID:** `iPhone_5G`  
+📡 **IP:** `192.168.1.48`  
+🔗 **MAC:** `EA:38:41:BC:AC:2A`  
+💻 **Hostname:** `iPhone`  
+🏷️ **Vendor:** `Raspberry Pi Foundation`  
+🧠 **OS:** `Linux 5.10 (Raspbian)`  
+🕒 **Seen at:** `Mon, 14 Jul 2025 22:18:31 IST`
+
+## 🔐 Notes
+
+- Requires root to run nmap -O (OS detection)
+- Tailscale support is optional (scans connected peers)
+
+## 🤘 Author
+
+Built by @[iamlucif3r](github.com/iamlucif3r) — Platform Security Engineer, Automation Enthusiast.
