@@ -136,4 +136,4 @@ sudo tail -f /var/log/netwatchdog.log
 
 ## 🤘 Author
 
-Built by @[iamlucif3r](github.com/iamlucif3r) — Platform Security Engineer, Automation Enthusiast.
+Built by @[iamlucif3r](https://www.github.com/iamlucif3r) — Platform Security Engineer, Automation Enthusiast.
