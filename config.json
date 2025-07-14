@@ -1,0 +1,6 @@
+{
+  "interface": "en1",
+  "discord_webhook": "https://discord.com/api/webhooks/1394341280208781473/Ls7THv8mmB1UdWfF-S9MOBHEDwBDOqGsYF5zMsEROT3tHw2Gtusid2-Eo7eftcNc5XH-",
+  "enable_tailscale": false,
+  "cache_file": "data/known.json"
+}
