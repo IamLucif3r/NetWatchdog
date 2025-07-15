@@ -129,6 +129,16 @@ sudo tail -f /var/log/netwatchdog.log
 🕒 **Seen at:** `Mon, 14 Jul 2025 22:18:31 IST`
 ```
 
+#### NOTE: To stop this service:
+
+```bash
+sudo launchctl unload /Library/LaunchDaemons/com.netwatchdog.plist
+
+#To restart it later
+sudo launchctl load /Library/LaunchDaemons/com.netwatchdog.plist
+
+```
+
 ## 🔐 Notes
 
 - Requires root to run nmap -O (OS detection)
